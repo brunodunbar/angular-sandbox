@@ -1,12 +1,9 @@
 var gulp = require('gulp');
-
+var runSequence = require('run-sequence');
 var del = require('del');
-
 var mainBowerFiles = require('main-bower-files');
-
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-
 var $ = require('gulp-load-plugins')(['gulp-*']);
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -25,21 +22,21 @@ function isDevelopment() {
     return !isProduction();
 }
 
-gulp.plumbedSrc = function ( ) {
+gulp.plumbedSrc = function( ) {
     return gulp.src.apply(gulp, arguments)
-            .pipe($.plumber({errorHandler: function (error) {
+            .pipe($.plumber({errorHandler: function(error) {
                     console.log(error);
                     this.emit('end');
                 }}));
 };
 
-gulp.task('font:bower', function () {
+gulp.task('font:bower', function() {
     return gulp.plumbedSrc(mainBowerFiles({filter: '**/fonts/*'}))
             .pipe(gulp.dest(config.dist + '/fonts'))
             .pipe(reload({stream: true}));
 });
 
-gulp.task('css:bower', function () {
+gulp.task('css:bower', function() {
     return gulp.plumbedSrc(mainBowerFiles({filter: '**/*.css'}))
             .pipe($.if(isDevelopment(), $.sourcemaps.init()))
             .pipe($.concat('vendor.css'))
@@ -48,7 +45,7 @@ gulp.task('css:bower', function () {
             .pipe(reload({stream: true}));
 });
 
-gulp.task('css', function () {
+gulp.task('css', function() {
     return gulp.plumbedSrc([config.src + '/**/*.css'])
             .pipe($.if(isDevelopment(), $.sourcemaps.init()))
             .pipe($.concat('app.css'))
@@ -57,7 +54,7 @@ gulp.task('css', function () {
             .pipe(reload({stream: true}));
 });
 
-gulp.task('js:template', function () {
+gulp.task('js:template', function() {
     return gulp.plumbedSrc([config.src + '/**/*.html', '!' + config.src + '/index.html'])
             .pipe($.if(isProduction(), $.minifyHtml()))
             .pipe($.angularTemplatecache({module: 'app'}))
@@ -65,14 +62,14 @@ gulp.task('js:template', function () {
             .pipe(reload({stream: true}));
 });
 
-gulp.task('js:bower', function () {
-    
+gulp.task('js:bower', function() {
+
     var filter = [
-        '**/*.js', 
+        '**/*.js',
         '!**/angular-mocks.js',
         '!**/bootstrap*.js'
     ];
-    
+
     return gulp.plumbedSrc(mainBowerFiles({filter: filter}))
             .pipe($.if(isDevelopment(), $.sourcemaps.init()))
             .pipe($.concat('vendor.js'))
@@ -82,7 +79,7 @@ gulp.task('js:bower', function () {
             .pipe(reload({stream: true}));
 });
 
-gulp.task('js', function () {
+gulp.task('js', function() {
     return gulp.plumbedSrc([config.src + '/**/*.js', '!' + config.src + '/**/*.spec.js'])
             .pipe($.angularFilesort())
             .pipe($.jshint())
@@ -96,21 +93,21 @@ gulp.task('js', function () {
             .pipe(reload({stream: true}));
 });
 
-gulp.task('html', function () {
+gulp.task('html', function() {
     return gulp.plumbedSrc([config.src + '/index.html'])
             .pipe(gulp.dest(config.dist))
             .pipe(reload({stream: true}));
 });
 
-gulp.task('clean', function (done) {
+gulp.task('clean', function(done) {
     del([config.dist], done);
 });
 
-gulp.task('build', ['clean'], function () {
-    gulp.start(['js:template', 'js:bower', 'js', 'css:bower', 'css', 'font:bower', 'html']);
+gulp.task('build', ['clean'], function(done) {
+    runSequence(['js:template', 'js:bower', 'js', 'css:bower', 'css', 'font:bower', 'html'], done);
 });
 
-gulp.task('watch', ['build'], function () {
+gulp.task('watch', ['build'], function() {
     gulp.watch([config.src + '/**/*.html', '!' + config.src + '/index.html'], ['js:template']);
     gulp.watch(['bower.json'], ['css:bower', 'js:bower', 'font:bower']);
     gulp.watch([config.src + '/**/*.js', '!' + config.src + '/**/*.spec.js'], ['js']);
@@ -118,7 +115,7 @@ gulp.task('watch', ['build'], function () {
     gulp.watch([config.src + '/index.html'], ['html']);
 });
 
-gulp.task('serve', ['watch'], function () {
+gulp.task('serve', ['watch'], function() {
     browserSync({
         server: config.dist
     });

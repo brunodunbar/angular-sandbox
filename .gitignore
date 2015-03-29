@@ -1,7 +1,3 @@
-/.idea/
 /bower_components/
 /node_modules/
-/nbproject/
-/dist/
 /coverage/
-/test-results.xml
