@@ -1,0 +1,15 @@
+{
+    "bitwise": true,
+    "eqeqeq": true,
+    "freeze": true,
+    "futurehostile": true,
+    "noarg": true,
+    "nonew": true,
+    "undef": true,
+    "unused": true,
+    "browser": true,
+    "devel": true,
+    "globals": {
+        "angular": false
+    }
+}
