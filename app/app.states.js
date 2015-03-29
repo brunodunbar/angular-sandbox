@@ -10,6 +10,8 @@
         $urlRouterProvider.otherwise('/welcome');
 
         $stateProvider
+                .state('main', {
+                })
                 .state('welcome', {
                     url: '/welcome',
                     templateUrl: 'welcome/welcome.html'

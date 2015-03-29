@@ -21,20 +21,20 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'dist/app.js': 'coverage',
+            //'dist/app.js': 'coverage',
             '**/*.js': ['sourcemap']
         },
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['dots', 'junit', 'coverage'],
+        reporters: ['dots', 'junit'],
         junitReporter: {
             outputFile: 'test-results.xml'
         },
-        coverageReporter: {
-            type: 'cobertura',
-            dir: 'coverage/'
-        },
+//        coverageReporter: {
+//            type: 'cobertura',
+//            dir: 'coverage/'
+//        },
         // web server port
         port: 9876,
         // enable / disable colors in the output (reporters and logs)
